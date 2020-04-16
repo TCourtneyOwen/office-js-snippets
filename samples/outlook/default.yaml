@@ -13,6 +13,29 @@ script:
             console.log(`Hello ${userProfile.displayName}`);
         }
     language: typescript
+scriptContextSwitch:
+    content: |
+        $("#run").click(run);
+
+        function run() {
+            Office.context.mailbox.addHandlerAsync(Office.EventType.ItemChanged, itemChanged);
+            UpdateTaskPaneUI(Office.context.mailbox.item);
+            var msgFrom = Office.context.mailbox.item.from;
+
+            console.log("Message received from: " + msgFrom.displayName + " (" + msgFrom.emailAddress + ")");
+            const userProfile = Office.context.mailbox.userProfile;
+            console.log(`Hello ${userProfile.displayName}`);
+        }
+
+        function UpdateTaskPaneUI(item) {
+            if (item != null) console.log(item.subject);
+        }
+        
+        function itemChanged(eventArgs) {
+            UpdateTaskPaneUI(Office.context.mailbox.item);
+        }
+        
+    language: typescript
 template:
     content: |
         <button id="run" class="ms-Button">
